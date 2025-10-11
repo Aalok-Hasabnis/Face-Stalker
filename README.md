@@ -1,13 +1,13 @@
 # Face Stalker
 
-Face Stalker is a Python-based face recognition tool that detects whether a specific person appears in a set of group photos. By providing a reference image of a person and a folder of group images, the script identifies and lists all images where the person is present.
+Face Stalker is a Python-based face recognition tool that detects whether a specific person appears in a set of group photos. It identifies matches using face embeddings, organizes results by face similarity and filename, and detects mislabeled images.
 
 ## Features
 
-- Detects a reference face across multiple images
-- Supports common image formats: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`
-- Prints a list of filenames where the person is detected
-- Easy to set up and run in a virtual environment
+- Detects faces using 128-dimensional embeddings with ChromaDB storage
+- Dual categorization: by face similarity and by filename
+- Identifies mislabeled images automatically
+- Supports `.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`, `.webp`
 
 ## Setup
 
@@ -25,15 +25,40 @@ Face Stalker is a Python-based face recognition tool that detects whether a spec
 
 3. **Install dependencies**
    ```bash
-   pip install face_recognition dlib opencv-python numpy
+   pip install face_recognition chromadb sentence-transformers pillow numpy
    ```
 
 ## Usage
 
-1. Place your reference image in the project folder (e.g., `reference.jpg`).
-2. Place group photos inside a folder (e.g., `group_images/`).
-3. Run the script:
+1. Place your reference image in the project folder (e.g., `reference.jpg`)
+2. Place group photos inside `group_images/` folder
+3. Update `main.py`:
+   ```python
+   reference_image = "reference.jpg"  # Change this
+   ```
+4. Run the script:
    ```bash
    python main.py
    ```
-4. The script will output the list of images where the reference person is detected.
+
+## Output
+
+The script provides three views:
+- **Face Similarity**: All images matching the reference face
+- **Filename Groups**: Images organized by their filename
+- **Mislabeling**: Images where face doesn't match filename
+
+## Configuration
+
+Adjust sensitivity in `main.py`:
+```python
+similarity_threshold=0.4,    # Lower = more results (0.0-1.0)
+filename_weight=0.4          # Higher = prioritize filename matching
+```
+
+## Tips
+
+- Name files: `person.jpg`, `person1.jpg`, `person_name2.jpg`
+- Use clear, front-facing photos
+- Lower `similarity_threshold` to 0.3 for more matches
+- Delete `chroma_db/` folder to reset database
